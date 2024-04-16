@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leet Password Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            word-wrap: break-word;
+            color: green;
+        }
+        .input-container {
+  		position: relative;
+}
+
+		.copy-icon {
+  		position: absolute;
+  		right: 200px; /* Adjust as needed */
+  		top: 64%;
+  		transform: translateY(-30%);
+  		cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Leet Password Generator</h1>
+        <label for="englishPhrase">Enter your English phrase:</label>
+        <input type="text" id="englishPhrase" placeholder="Enter text...">
+        <button onclick="convertToLeet()">Convert to Password</button><br>
+        <div class="result" id="resultArea"></div>
+ 
+         <span class="copy-icon" onclick="copyPass()">📋</span>
+    </div>
+
+    <script>
+        function toLeet(text) {
+            const leetDict = {
+          			'c': '(',
+                'e': '3',
+                'i': '!',
+                'o': '0',
+                's': '$',
+                't': '7',
+                'B': '8',
+                'a': '@',
+                ' ': '_'
+            };
+
+            let leetText = "";
+            let convertedChars = {}; // Keep track of converted characters
+
+            for (let char of text) {
+                const lowerChar = char.toLowerCase();
+                if (leetDict[lowerChar] && !convertedChars[lowerChar]) {
+                    leetText += leetDict[lowerChar];
+                    convertedChars[lowerChar] = true;
+                } else if (leetDict[lowerChar]) {
+                    // If character is already converted, randomly choose uppercase or lowercase
+                    leetText += Math.random() < 0.5 ? leetDict[lowerChar].toUpperCase() : leetDict[lowerChar].toLowerCase();
+                } else {
+                    leetText += char;
+                }
+            }
+            return leetText;
+        }
+
+        function convertToLeet() {
+            const englishPhrase = document.getElementById('englishPhrase').value;
+            const resultArea = document.getElementById('resultArea');
+
+            if (englishPhrase.length < 10) {
+                resultArea.textContent = "Please enter at least 10 characters before conversion.";
+                return;
+            }
+
+            const leetPassword = toLeet(englishPhrase);
+            resultArea.textContent = leetPassword;
+            resultArea.style.color = 'green';
+
+            // Copy to clipboard
+            const el = document.createElement('textarea');
+            el.value = leetPassword;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        }
+        function copyPass() {
+        var copyText = document.getElementById("myInput");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+        navigator.clipboard.writeText(copyText.value);
+        }
+    </script>
+</body>
+</html>
